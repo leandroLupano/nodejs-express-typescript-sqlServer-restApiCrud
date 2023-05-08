@@ -1,5 +1,6 @@
 import sql from 'mssql';
 import { config } from '../config.js';
+import { NextFunction, Request, Response } from 'express';
 
 const dbSettings = {
   user: config.dbUser,
@@ -12,10 +13,15 @@ const dbSettings = {
   },
 };
 
-export const dbConnection = async () => {
+export const dbConnection = async (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+) => {
   try {
     const pool = await sql.connect(dbSettings);
-    return pool;
+    req.body.db = pool;
+    next();
   } catch (error) {
     console.error(error);
   }
