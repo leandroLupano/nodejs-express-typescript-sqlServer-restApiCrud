@@ -2,6 +2,7 @@ import createDebug from 'debug';
 import { NextFunction, Request, Response } from 'express';
 import sql from 'mssql';
 import { queries } from '../database/database.queries.js';
+import { HTTPError } from '../errors/errors.js';
 
 const debug = createDebug('SERVER:controller');
 
@@ -19,8 +20,6 @@ export class ProductsController {
 
       res.json(result.recordset);
     } catch (error) {
-      res.status(500);
-      res.send((error as Error).message);
       next(error);
     }
   }
@@ -39,8 +38,6 @@ export class ProductsController {
 
       res.json(result.recordset[0]);
     } catch (error) {
-      res.status(500);
-      res.send((error as Error).message);
       next(error);
     }
   }
@@ -52,9 +49,11 @@ export class ProductsController {
       const { name, description, quantity } = req.body;
 
       if (!name || !description || !quantity)
-        return res
-          .status(400)
-          .json({ msg: 'Bad request. Please complete all the fields' });
+        throw new HTTPError(
+          400,
+          'Bad request. Please complete all the fields',
+          'The fields are not complete in add new product'
+        );
 
       const pool = req.body.db;
 
@@ -67,8 +66,6 @@ export class ProductsController {
 
       res.json({ name, description, quantity });
     } catch (error) {
-      res.status(500);
-      res.send((error as Error).message);
       next(error);
     }
   }
@@ -80,11 +77,20 @@ export class ProductsController {
       const { name, description, quantity } = req.body;
 
       if (!name || !description || !quantity)
-        return res
-          .status(400)
-          .json({ msg: 'Bad request. Please complete all the fields' });
+        throw new HTTPError(
+          400,
+          'Bad request. Please complete all the fields',
+          'The fields are not complete in update'
+        );
 
       const { id } = req.params;
+
+      if (!id)
+        throw new HTTPError(
+          400,
+          'Bad request. Please complete the id',
+          'The id is missing in the body.params'
+        );
 
       const pool = req.body.db;
 
@@ -98,8 +104,6 @@ export class ProductsController {
 
       res.json({ name, description, quantity, id });
     } catch (error) {
-      res.status(500);
-      res.send((error as Error).message);
       next(error);
     }
   }
@@ -110,6 +114,13 @@ export class ProductsController {
 
       const { id } = req.params;
 
+      if (!id)
+        throw new HTTPError(
+          400,
+          'Bad request. Please complete the id',
+          'The id is missing in the body.params'
+        );
+
       const pool = req.body.db;
 
       await pool
@@ -119,8 +130,6 @@ export class ProductsController {
 
       res.sendStatus(204);
     } catch (error) {
-      res.status(500);
-      res.send((error as Error).message);
       next(error);
     }
   }
@@ -135,8 +144,6 @@ export class ProductsController {
 
       res.json(result.recordset[0]['']);
     } catch (error) {
-      res.status(500);
-      res.send((error as Error).message);
       next(error);
     }
   }

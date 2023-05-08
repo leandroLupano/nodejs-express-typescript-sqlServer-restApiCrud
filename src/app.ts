@@ -4,6 +4,7 @@ import express from 'express';
 import morgan from 'morgan';
 import { productsRouter } from './router/products.router.js';
 import { dbConnection } from './database/database.connection.js';
+import { errorsMiddleware } from './errors/errors.middleware.js';
 
 const debug = createDebug('SERVER:app');
 debug('app-initiated');
@@ -20,6 +21,8 @@ app.use(cors(corsOptions));
 app.use(dbConnection);
 
 app.use('/products', productsRouter);
+
+app.use(errorsMiddleware);
 
 app.get('/', (_req, res) => {
   res.json({
