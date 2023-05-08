@@ -14,12 +14,27 @@ productsRouter.get(
   productsController.getAllProducts.bind(productsController)
 );
 
-productsRouter.get('/:id');
+productsRouter.get(
+  '/count',
+  productsController.countAllProducts.bind(productsController)
+);
 
-productsRouter.post('/');
+productsRouter.get(
+  '/:id',
+  productsController.getOneProduct.bind(productsController)
+);
 
-productsRouter.put('/:id');
+productsRouter.post(
+  '/',
+  productsController.addNewProduct.bind(productsController)
+);
 
-productsRouter.delete('/:id');
+productsRouter.put(
+  '/:id',
+  productsController.updateProduct.bind(productsController)
+);
 
-productsRouter.get('/count');
+productsRouter.delete(
+  '/:id',
+  productsController.deleteOneProduct.bind(productsController)
+);

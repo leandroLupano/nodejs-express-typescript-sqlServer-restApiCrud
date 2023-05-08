@@ -4,7 +4,7 @@ export const queries = {
     'INSERT INTO [webstore].[dbo].[Products] (name, description, quantity) VALUES (@name,@description,@quantity)',
   getProductById: 'SELECT * FROM Products WHERE Id = @Id',
   deleteProductById: 'DELETE FROM [webstore].[dbo].[Products] WHERE Id=@Id',
-  getTotalProducts: 'SELECT COUNT (*) FROM [webstore].[dbo].[Products]',
+  countTotalProducts: 'SELECT COUNT (*) FROM [webstore].[dbo].[Products]',
   updateProductById:
     'UPDATE [webstore].[dbo].[Products] SET Name=@name, Description=@description, Quantity=@quantity WHERE Id=@Id',
 };
